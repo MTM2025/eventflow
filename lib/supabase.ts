@@ -1,0 +1,24 @@
+import { createClient } from '@supabase/supabase-js'
+import { Database } from '@/types/database'
+
+const supabaseUrl = process.env.EXPO_PUBLIC_SUPABASE_URL!
+const supabaseAnonKey = process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables')
+}
+
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storage: {
+      getItem: async (key: string) => {
+        return null
+      },
+      setItem: async (key: string, value: string) => {},
+      removeItem: async (key: string) => {},
+    },
+    autoRefreshToken: false,
+    persistSession: false,
+    detectSessionInUrl: false,
+  },
+})
