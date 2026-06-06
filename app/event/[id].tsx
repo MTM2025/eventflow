@@ -4,6 +4,7 @@ import { useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MapPin, Calendar, Clock, Heart, Share2, ChevronLeft, Users } from 'lucide-react-native';
 import { supabase } from '@/lib/supabase';
+import { useSavedEvents } from '@/lib/saved-events';
 
 type Event = {
   id: string;
@@ -27,7 +28,9 @@ export default function EventDetailScreen() {
   const { id } = useLocalSearchParams();
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isSaved, setIsSaved] = useState(false);
+  const { isSaved, toggleSave } = useSavedEvents();
+  const eventId = String(id);
+  const saved = isSaved(eventId);
 
   useEffect(() => {
     fetchEvent();
@@ -78,9 +81,6 @@ export default function EventDetailScreen() {
     }
   };
 
-  const toggleSave = () => {
-    setIsSaved(!isSaved);
-  };
 
   if (loading) {
     return (
@@ -117,8 +117,8 @@ export default function EventDetailScreen() {
               <TouchableOpacity style={styles.headerButton} onPress={handleShare}>
                 <Share2 size={22} color="#FFFFFF" strokeWidth={2} />
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.headerButton, styles.headerButtonMargin]} onPress={toggleSave}>
-                <Heart size={22} color={isSaved ? '#EF4444' : '#FFFFFF'} strokeWidth={2} fill={isSaved ? '#EF4444' : 'transparent'} />
+              <TouchableOpacity style={[styles.headerButton, styles.headerButtonMargin]} onPress={() => toggleSave(eventId)}>
+                <Heart size={22} color={saved ? '#EF4444' : '#FFFFFF'} strokeWidth={2} fill={saved ? '#EF4444' : 'transparent'} />
               </TouchableOpacity>
             </View>
           </SafeAreaView>

@@ -10,6 +10,7 @@ import {
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { SplashScreen } from 'expo-router';
+import { SavedEventsProvider } from '@/lib/saved-events';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -34,12 +35,12 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <SavedEventsProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
-    </>
+    </SavedEventsProvider>
   );
 }
